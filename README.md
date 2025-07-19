@@ -6,8 +6,6 @@
 
 ---
 
-## 🚩 The Core Problem
-=======
 ---
 
 ## 📣 Author
@@ -16,8 +14,6 @@
 [GitHub](https://github.com/VedantChandore)
 
 ##  The Core Problem
->>>>>>> c67a017189c7a090d3d2e663fbc668db3ee8b308
-
 Modern LLMs (Cohere, OpenAI, Gemini, Anthropic, etc.) are powerful, but their **token limits** make it hard to fit rich, multi-section prompts—especially for Retrieval-Augmented Generation (RAG), few-shot learning, and instruction-heavy use cases. Developers waste time manually trimming prompts, risking loss of important context, incomplete responses, or costly token overages.
 
 **promptfit** solves this by automating prompt analysis, compression, and optimization—so you get the most value from every token, every time.
@@ -198,9 +194,9 @@ Pull requests, issues, and stars are welcome! For major changes, please open an 
 [GitHub](https://github.com/VedantChandore)
 
 ---
-<<<<<<< HEAD
+<<<<<<<
 
 *Built for the next generation of GenAI and LLM developers. Optimize your prompts, maximize your results!* 
 =======
-*Built for the next generation of GenAI and LLM developers. Optimize your prompts, maximize your results!*
->>>>>>> c67a017189c7a090d3d2e663fbc668db3ee8b308
+
+>>>>>>> 
