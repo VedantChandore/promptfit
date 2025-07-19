@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/promptfit.svg)](https://pypi.org/project/promptfit/)
 [![GitHub stars](https://img.shields.io/github/stars/VedantChandore/promptfit?style=social)](https://github.com/VedantChandore/promptfit)
-<<<<<<< HEAD
+
 
 ---
 
@@ -58,14 +58,14 @@ pip install promptfit
 
 ```python
 from promptfit import optimize_prompt
-<<<<<<< HEAD
+
 =======
 from promptfit.token_budget import estimate_tokens, estimate_tokens_per_section, estimate_total_tokens
 from promptfit.embedder import get_embeddings
 from promptfit.relevance import rank_segments_by_relevance
 from promptfit.paraphraser import paraphrase_prompt
 from promptfit.utils import split_sentences
->>>>>>> c67a017189c7a090d3d2e663fbc668db3ee8b308
+
 
 query = "Summarize this support ticket with action items."
 prompt = """
