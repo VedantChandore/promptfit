@@ -1,0 +1,9 @@
+cohere
+scikit-learn
+tiktoken
+python-dotenv
+nltk
+spacy
+rich
+typer
+pytest

@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: promptfit
+Version: 0.2.0
+Summary: promptfit - Modular toolkit for optimizing LLM prompts: estimate token usage, rank by semantic relevance, and compress with LLMs to fit any token budget. Perfect for RAG, few-shot, and instruction-heavy GenAI workflows.
+Author-email: Vedant Laxman Chandore <vedantchandore5@email.com>
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: cohere
+Requires-Dist: scikit-learn
+Requires-Dist: tiktoken
+Requires-Dist: python-dotenv
+Requires-Dist: nltk
+Requires-Dist: spacy
+Requires-Dist: rich
+Requires-Dist: typer
+Requires-Dist: pytest
