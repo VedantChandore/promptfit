@@ -2,10 +2,21 @@
 
 [![PyPI version](https://badge.fury.io/py/promptfit.svg)](https://pypi.org/project/promptfit/)
 [![GitHub stars](https://img.shields.io/github/stars/VedantChandore/promptfit?style=social)](https://github.com/VedantChandore/promptfit)
+<<<<<<< HEAD
 
 ---
 
 ## 🚩 The Core Problem
+=======
+---
+
+## 📣 Author
+
+**Vedant Laxman Chandore**  
+[GitHub](https://github.com/VedantChandore)
+
+##  The Core Problem
+>>>>>>> c67a017189c7a090d3d2e663fbc668db3ee8b308
 
 Modern LLMs (Cohere, OpenAI, Gemini, Anthropic, etc.) are powerful, but their **token limits** make it hard to fit rich, multi-section prompts—especially for Retrieval-Augmented Generation (RAG), few-shot learning, and instruction-heavy use cases. Developers waste time manually trimming prompts, risking loss of important context, incomplete responses, or costly token overages.
 
@@ -51,6 +62,14 @@ pip install promptfit
 
 ```python
 from promptfit import optimize_prompt
+<<<<<<< HEAD
+=======
+from promptfit.token_budget import estimate_tokens, estimate_tokens_per_section, estimate_total_tokens
+from promptfit.embedder import get_embeddings
+from promptfit.relevance import rank_segments_by_relevance
+from promptfit.paraphraser import paraphrase_prompt
+from promptfit.utils import split_sentences
+>>>>>>> c67a017189c7a090d3d2e663fbc668db3ee8b308
 
 query = "Summarize this support ticket with action items."
 prompt = """
@@ -61,8 +80,36 @@ Background: The customer purchased the product two months ago and has experience
 Details: The product fails to start on cold mornings, and the battery drains quickly. The customer has tried all troubleshooting steps provided in the manual. They are upset about the lack of response from support and mention that they may leave a negative review if the issue is not resolved soon.
 """
 
+<<<<<<< HEAD
 optimized = optimize_prompt(prompt, query, max_tokens=120)
 print("Optimized prompt:\n", optimized)
+=======
+print("--- TOKEN ESTIMATION ---")
+sections = split_sentences(prompt)
+tokens_per_section = estimate_tokens_per_section(sections)
+total_tokens = estimate_total_tokens(sections)
+print("Tokens per section:", tokens_per_section)
+print("Total tokens:", total_tokens)
+
+print("\n--- EMBEDDING GENERATION ---")
+embeddings = get_embeddings([query] + sections[:2])  # Just show for first 2 sections for brevity
+print("Embedding for query (first 5 dims):", embeddings[0][:5])
+print("Embedding for section 1 (first 5 dims):", embeddings[1][:5])
+
+print("\n--- RELEVANCE RANKING ---")
+ranked = rank_segments_by_relevance(sections, query, get_embeddings)
+for i, (seg, score) in enumerate(ranked[:3]):
+    print(f"Top {i+1} segment (score={score:.3f}): {seg[:60]}...")
+
+print("\n--- PARAPHRASING (LLM COMPRESSION) ---")
+short_prompt = " ".join(sections[:3])
+paraphrased = paraphrase_prompt(short_prompt, instructions="Compress and keep all key info.", max_tokens=40)
+print("Paraphrased prompt:", paraphrased)
+
+print("\n--- END-TO-END OPTIMIZATION ---")
+optimized = optimize_prompt(prompt, query, max_tokens=60)
+print("Optimized prompt:\n", optimized) 
+>>>>>>> c67a017189c7a090d3d2e663fbc668db3ee8b308
 ```
 
 ### **Command Line**
@@ -151,5 +198,9 @@ Pull requests, issues, and stars are welcome! For major changes, please open an 
 [GitHub](https://github.com/VedantChandore)
 
 ---
+<<<<<<< HEAD
 
 *Built for the next generation of GenAI and LLM developers. Optimize your prompts, maximize your results!* 
+=======
+*Built for the next generation of GenAI and LLM developers. Optimize your prompts, maximize your results!*
+>>>>>>> c67a017189c7a090d3d2e663fbc668db3ee8b308
