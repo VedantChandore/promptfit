@@ -219,9 +219,9 @@ Pull requests, issues, and stars are welcome! For major changes, please open an 
 [GitHub](https://github.com/VedantChandore)
 
 ---
-<<<<<<<
+
 
 *Built for the next generation of GenAI and LLM developers. Optimize your prompts, maximize your results!* 
 =======
 
->>>>>>> 
+
