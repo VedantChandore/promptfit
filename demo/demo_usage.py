@@ -1,7 +1,7 @@
 # demo_relevance_on_prompt.py
 
 import os
-
+import time
 # 1. Set your Cohere key (or have it in your env)
 os.environ["COHERE_API_KEY"] = "Kwi33HNnmXRDCkO4j7FndNP3LATOoKX3yvoOdztK"
 
@@ -22,6 +22,9 @@ fixes, and suggest long-term retention strategies.
 
 query = "Summarize issues, emotional tone, action items, and retention strategies."
 
+print("=== PROMPT ===")
+print(prompt)
+
 # 3. Split into sentences
 sentences = split_sentences(prompt)
 print("=== SENTENCES ===")
@@ -39,7 +42,7 @@ sent_embs = embs[1:]
 scores = compute_cosine_similarities(query_emb, sent_embs)
 
 # 6. Display relevance scores
-print("=== RELEVANCE SCORES ===")
+print("=== RELEVANCE SCORES OF COSINE SIMILARITY===")
 for sent, score in zip(sentences, scores):
     print(f"{score:.4f} – {sent!r}")
 print()
@@ -48,11 +51,24 @@ print()
 orig_tokens = estimate_tokens(prompt)
 print(f"Original prompt ≈ {orig_tokens} tokens\n")
 
-# 8. Run optimizer
+# 8. Run optimizer with timing
 budget = 40
+start_time = time.time()
 optimized = optimize_prompt(prompt, query, max_tokens=budget)
+end_time = time.time()
 opt_tokens = estimate_tokens(optimized)
 
-# 9. Output final result
+tokens_saved = orig_tokens - opt_tokens
+percent_saved = (tokens_saved / orig_tokens) * 100
+
+# 9. Output final result with efficiency stats
 print(f"Optimized prompt ({opt_tokens} tokens ≤ {budget} budget):\n")
 print(optimized)
+print("\n--- Efficiency Stats ---")
+print(f"Token reduction: {orig_tokens - opt_tokens} tokens")
+print(f"Reduction percentage: {(orig_tokens - opt_tokens) / orig_tokens * 100:.1f}%")
+print(f"Optimization time: {end_time - start_time:.2f} seconds")
+print(f"Tokens Saved: {tokens_saved}")
+
+
+
