@@ -20,15 +20,20 @@ def estimate_tokens(text: str) -> int:
             resp = co.tokenize(text)
             return len(resp.tokens)
         except Exception:
-            pass  # Fallback if Cohere call fails
-    # Fallback: count words, adjust for token estimate
-    words = re.findall(r'\w+', text)
-    return max(1, int(len(words) / 0.75))
+            # Fallback if Cohere call fails
+            pass
+    # ===== CHANGED: Use \S+ to count tokens more accurately =====
+    # old: words = re.findall(r'\w+', text)
+    tokens = re.findall(r'\S+', text)  # includes punctuation and splits on whitespace
+    return max(1, int(len(tokens) / 0.75))
+
 
 def estimate_tokens_per_section(sections: List[str]) -> List[int]:
     """Estimate token usage for each section in a list."""
     return [estimate_tokens(section) for section in sections]
 
+
 def estimate_total_tokens(sections: List[str]) -> int:
     """Estimate total token usage for a list of sections."""
-    return sum(estimate_tokens_per_section(sections)) 
+    return sum(estimate_tokens_per_section(sections))
+

@@ -1,41 +1,58 @@
-from promptfit import optimize_prompt
-from promptfit.token_budget import estimate_tokens, estimate_tokens_per_section, estimate_total_tokens
-from promptfit.embedder import get_embeddings
-from promptfit.relevance import rank_segments_by_relevance
-from promptfit.paraphraser import paraphrase_prompt
+# demo_relevance_on_prompt.py
+
+import os
+
+# 1. Set your Cohere key (or have it in your env)
+os.environ["COHERE_API_KEY"] = "Kwi33HNnmXRDCkO4j7FndNP3LATOoKX3yvoOdztK"
+
+from promptfit.token_budget import estimate_tokens
 from promptfit.utils import split_sentences
+from promptfit.embedder import get_embeddings
+from promptfit.relevance import compute_cosine_similarities
+from promptfit.optimizer import optimize_prompt
 
-query = "Summarize this support ticket with action items."
+# 2. Your actual long prompt
 prompt = """
-You are a helpful assistant. This is the customer's full complaint about a recent product issue. The customer is frustrated and has provided a lot of background information, some of which may not be relevant. Please include background, emotional tone, and recommendations in your summary. Make sure to be concise and actionable.
-
-Background: The customer purchased the product two months ago and has experienced intermittent issues since then. They have contacted support twice before but did not receive a satisfactory resolution. The customer is now requesting a refund or a replacement.
-
-Details: The product fails to start on cold mornings, and the battery drains quickly. The customer has tried all troubleshooting steps provided in the manual. They are upset about the lack of response from support and mention that they may leave a negative review if the issue is not resolved soon.
+You are a customer-support assistant. A user reports that their device fails
+intermittently under cold conditions, the battery drains within two hours, and
+previous support tickets went unanswered. They’ve provided logs and screenshots.
+Please summarize the issues, note their emotional tone, propose immediate
+fixes, and suggest long-term retention strategies.
 """
 
-print("--- TOKEN ESTIMATION ---")
-sections = split_sentences(prompt)
-tokens_per_section = estimate_tokens_per_section(sections)
-total_tokens = estimate_total_tokens(sections)
-print("Tokens per section:", tokens_per_section)
-print("Total tokens:", total_tokens)
+query = "Summarize issues, emotional tone, action items, and retention strategies."
 
-print("\n--- EMBEDDING GENERATION ---")
-embeddings = get_embeddings([query] + sections[:2])  # Just show for first 2 sections for brevity
-print("Embedding for query (first 5 dims):", embeddings[0][:5])
-print("Embedding for section 1 (first 5 dims):", embeddings[1][:5])
+# 3. Split into sentences
+sentences = split_sentences(prompt)
+print("=== SENTENCES ===")
+for i, s in enumerate(sentences, 1):
+    print(f"{i}: {s!r}")
+print()
 
-print("\n--- RELEVANCE RANKING ---")
-ranked = rank_segments_by_relevance(sections, query, get_embeddings)
-for i, (seg, score) in enumerate(ranked[:3]):
-    print(f"Top {i+1} segment (score={score:.3f}): {seg[:60]}...")
+# 4. Compute embeddings (first the query, then the sentences)
+all_texts = [query] + sentences
+embs = get_embeddings(all_texts)
 
-print("\n--- PARAPHRASING (LLM COMPRESSION) ---")
-short_prompt = " ".join(sections[:3])
-paraphrased = paraphrase_prompt(short_prompt, instructions="Compress and keep all key info.", max_tokens=40)
-print("Paraphrased prompt:", paraphrased)
+# 5. Compute cosine similarities between query and each sentence
+query_emb = embs[0]
+sent_embs = embs[1:]
+scores = compute_cosine_similarities(query_emb, sent_embs)
 
-print("\n--- END-TO-END OPTIMIZATION ---")
-optimized = optimize_prompt(prompt, query, max_tokens=60)
-print("Optimized prompt:\n", optimized) 
+# 6. Display relevance scores
+print("=== RELEVANCE SCORES ===")
+for sent, score in zip(sentences, scores):
+    print(f"{score:.4f} – {sent!r}")
+print()
+
+# 7. Show total token count before optimization
+orig_tokens = estimate_tokens(prompt)
+print(f"Original prompt ≈ {orig_tokens} tokens\n")
+
+# 8. Run optimizer
+budget = 40
+optimized = optimize_prompt(prompt, query, max_tokens=budget)
+opt_tokens = estimate_tokens(optimized)
+
+# 9. Output final result
+print(f"Optimized prompt ({opt_tokens} tokens ≤ {budget} budget):\n")
+print(optimized)
