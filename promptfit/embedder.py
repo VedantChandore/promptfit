@@ -33,3 +33,4 @@ def get_embeddings(texts: List[str]) -> List[List[float]]:
             for text, emb in zip(batch_texts, response.embeddings):
                 _embedding_cache[text] = emb
     return [_embedding_cache[t] for t in texts]
+

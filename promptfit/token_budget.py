@@ -37,3 +37,4 @@ def estimate_total_tokens(sections: List[str]) -> int:
     """Estimate total token usage for a list of sections."""
     return sum(estimate_tokens_per_section(sections))
 
+

@@ -37,3 +37,4 @@ def paraphrase_prompt(prompt: str, instructions: Optional[str] = None, max_token
         stricter = f"Ensure output under {max_tokens} tokens. Further compress."  
         return paraphrase_prompt(text, instructions=stricter, max_tokens=max_tokens)
     return text
+
