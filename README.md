@@ -54,7 +54,7 @@ pip install promptfit
 ## Tested Output
 ```markdown
    
-   !(docs/tested.png)
+   !(promptoptimizer/docs/tested.png)
    ```
 
 ## 🚀 Demo Usage
