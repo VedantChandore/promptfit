@@ -52,10 +52,9 @@ pip install promptfit
 
 ---
 ## Tested Output
-```markdown
-   
-   !(promptoptimizer/docs/tested.png)
-   ```
+
+![image_alt](https://github.com/VedantChandore/promptfit/blob/main/docs/image.png?raw=true)
+
 
 ## 🚀 Demo Usage
 
