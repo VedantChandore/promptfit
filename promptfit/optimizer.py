@@ -19,14 +19,14 @@ def optimize_prompt(prompt: str, query: str, max_tokens: int = DEFAULT_MAX_TOKEN
 
     # 2. Estimate tokens
     tokens_per_section = estimate_tokens_per_section(sections)
-    total_tokens = sum(tokens_per_section)
+    total_tokens= sum(tokens_per_section)
     # If already within budget
     if total_tokens <= max_tokens:
         return prompt
 
     # 3. Rank by relevance
-    ranked = rank_segments_by_relevance(sections, query, get_embeddings)
-    sorted_sections = [s for s, _ in ranked]
+    ranked_sections = rank_segments_by_relevance(sections, query, get_embeddings)
+    sorted_sections = [s for s, _ in ranked_sections]
 
     # 4. Prune/trim
     pruned_sections = []
