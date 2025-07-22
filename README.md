@@ -51,6 +51,11 @@ pip install promptfit
 ```
 
 ---
+## Tested Output
+```markdown
+   
+   !(docs/tested.png)
+   ```
 
 ## 🚀 Demo Usage
 
