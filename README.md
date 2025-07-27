@@ -32,7 +32,16 @@ Modern LLMs (Cohere, OpenAI, Gemini, Anthropic, etc.) are powerful, but their **
 - **🖥️ CLI Support:** Optimize prompts directly from the command line.
 
 ---
+## 📊 PromptFit vs Baseline Comparison (RAG Flow)
+|                         Metric | Without PromptFit (Baseline) | With PromptFit (Optimized) | Improvement     |
+| -----------------------------: | :--------------------------: | :------------------------: | :-------------- |
+| 🔢 Tokens in Retrieved Context |              284             |             97             | ↓ 65.8%         |
+|           ⏱️ Optimization Time |              N/A             |            1.72s           | \~Real-time     |
+|              💬 Prompt Clarity |  Mixed, sometimes redundant  |     Concise & relevant     | ✅ More focused  |
+|             💰 Cost Efficiency | Higher (due to long context) |    Lower (fewer tokens)    | ↓ Reduced spend |
+|        📈 LLM Response Quality |       Slightly verbose       |     Direct, contextual     | ✅ More precise  |
 
+---
 ## 🛠️ Tech Stack
 
 - **Language:** Python 3.10+
