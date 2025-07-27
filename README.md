@@ -30,6 +30,24 @@ Modern LLMs (Cohere, OpenAI, Gemini, Anthropic, etc.) are powerful, but their **
 - **🧪 Test-Driven:** Comprehensive unit tests with mocked or live Cohere API responses.
 - **🔐 Secure API Key Handling:** Loads your Cohere API key from a `.env` file or environment variable.
 - **🖥️ CLI Support:** Optimize prompts directly from the command line.
+---
+✅ Does promptfit Lose Context?
+❌ If Done Naively:
+If you just truncate text to meet token limits, yes, you risk removing vital context.
+
+This is what most LLM developers currently do manually — and it's dangerous.
+
+✅ What promptfit Does Instead:
+Your package intelligently retains semantically relevant chunks and:
+
+✅ Uses cosine similarity between the query and each sentence to prioritize important information.
+
+✅ Applies token estimation to make sure output fits within budget.
+
+✅ Optionally uses paraphrasing (via Cohere LLM) to compress rather than drop content.
+
+✅ Keeps the query in mind throughout — relevance is measured with respect to the query, not blindly.
+
 
 ---
 ## 📊 PromptFit vs Baseline Comparison (RAG Flow)
