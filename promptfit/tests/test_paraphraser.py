@@ -1,4 +1,4 @@
-import pytest
+import pytest # type: ignore
 from promptfit import paraphraser
 
 @pytest.mark.skipif(paraphraser.cohere is None, reason="cohere not installed")

@@ -2,7 +2,7 @@ import time
 from typing import Optional
 
 try:
-    import cohere
+    import cohere # type: ignore
 except ImportError:
     cohere = None
 

@@ -1,6 +1,6 @@
 # demo_rag.py
-import faiss
-import numpy as np
+import faiss # type: ignore
+import numpy as np # type: ignore
 
 from promptfit.embedder import get_embeddings
 from promptfit.relevance import rank_segments_by_relevance

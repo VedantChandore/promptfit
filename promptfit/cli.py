@@ -1,5 +1,5 @@
-import typer
-from rich import print
+import typer # type: ignore
+from rich import print # type: ignore
 from . import optimize_prompt
 
 def main(prompt: str = typer.Argument(..., help="Prompt to optimize."),

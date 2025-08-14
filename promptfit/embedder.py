@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 try:
-    import cohere
+    import cohere # type: ignore
 except ImportError:
     cohere = None
 
