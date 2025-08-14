@@ -18,6 +18,25 @@ def paraphrase_prompt(prompt: str, instructions: Optional[str] = None, max_token
     api_key = get_cohere_api_key()
     co = cohere.Client(api_key)
 
+    def cohere_generate(prompt_text):
+        response = co.generate(
+            model=COHERE_LLM_MODEL,
+            prompt=prompt_text,
+            max_tokens=max_tokens,
+            temperature=0.2,
+            stop_sequences=["\n\n"]
+        )
+        return response.generations[0].text.strip()
+
+    # HyDE phase — create semantically complete version
+    hyde_prompt = (
+        "Rewrite the following prompt into a clear, complete, and unambiguous version, "
+        "adding any implied but important details so that it fully represents the intended meaning:\n\n"
+        f"{prompt}"
+    )
+    expanded_prompt = cohere_generate(hyde_prompt)
+
+    # Compression phase
     base_system_prompt = (
         "Rewrite the following prompt to fit within the token budget, preserving all key instructions and meaning. "
         "Be as concise as possible."
@@ -28,21 +47,14 @@ def paraphrase_prompt(prompt: str, instructions: Optional[str] = None, max_token
     retries = 0
     max_retries = 5
     backoff_base = 1
-    current_prompt = prompt
+    current_prompt = expanded_prompt
 
-    best_attempt = prompt
-    best_attempt_tokens = estimate_tokens(prompt)
+    best_attempt = expanded_prompt
+    best_attempt_tokens = estimate_tokens(expanded_prompt)
 
     while retries <= max_retries:
         try:
-            response = co.generate(
-                model=COHERE_LLM_MODEL,
-                prompt=f"{base_system_prompt}\n\nPROMPT:\n{current_prompt}",
-                max_tokens=max_tokens,
-                temperature=0.2,
-                stop_sequences=["\n\n"]
-            )
-            text = response.generations[0].text.strip()
+            text = cohere_generate(f"{base_system_prompt}\n\nPROMPT:\n{current_prompt}")
             token_count = estimate_tokens(text)
 
             if token_count < best_attempt_tokens:
