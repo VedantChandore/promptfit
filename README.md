@@ -1,256 +1,248 @@
-# promptfit
+# PromptFit
 
 [![PyPI version](https://badge.fury.io/py/promptfit.svg)](https://pypi.org/project/promptfit/)
 [![GitHub stars](https://img.shields.io/github/stars/VedantChandore/promptfit?style=social)](https://github.com/VedantChandore/promptfit)
 
+**Smart prompt optimization for modern LLMs**
 
----
+PromptFit automatically analyzes, compresses, and optimizes your prompts to fit within token budgets while preserving semantic relevance and context. No more manual prompt trimming or unexpected token overages.
 
----
+## The Problem
 
-## 📣 Author
+Working with modern LLMs like GPT, Cohere, Gemini, and Claude often means dealing with strict token limits. This becomes especially challenging when building applications that require:
 
-**Vedant Laxman Chandore**  
-[GitHub](https://github.com/VedantChandore)
+- Rich, multi-section prompts for RAG (Retrieval-Augmented Generation)
+- Few-shot learning examples
+- Complex instruction sets
+- Large context windows
 
-##  The Core Problem
-Modern LLMs (Cohere, OpenAI, Gemini, Anthropic, etc.) are powerful, but their **token limits** make it hard to fit rich, multi-section prompts—especially for Retrieval-Augmented Generation (RAG), few-shot learning, and instruction-heavy use cases. Developers waste time manually trimming prompts, risking loss of important context, incomplete responses, or costly token overages.
+Developers typically resort to manual prompt trimming, which risks:
+- Loss of critical context
+- Incomplete or poor-quality responses
+- Unexpected token costs
+- Time wasted on prompt engineering
 
-**promptfit** solves this by automating prompt analysis, compression, and optimization—so you get the most value from every token, every time.
+## Solution
 
----
+PromptFit solves this through intelligent prompt optimization:
 
-## ✨ Features
+- **Token Budget Analysis**: Estimate token usage before sending prompts to LLMs
+- **Semantic Relevance Scoring**: Rank prompt sections by relevance using embeddings and cosine similarity  
+- **Smart Content Pruning**: Remove low-relevance sections while preserving key information
+- **Intelligent Paraphrasing**: Compress content using LLMs instead of just dropping it
+- **Modular Architecture**: Use individual components or the complete optimization pipeline
 
-- **🔢 Token Budget Estimator:** Analyze and estimate token usage for prompt templates, sections, and variables—before sending to an LLM.
-- **🧭 Semantic Relevance Scoring:** Split prompts into sections, generate embeddings (Cohere), and rank by cosine similarity to your query or task.
-- **✂️ Smart Prompt Pruner:** Drop or trim low-salience sections first, keeping only the most relevant content to fit your token budget.
-- **✍️ Paraphrasing Module:** Use Cohere’s LLM to rewrite and compress over-budget prompts, preserving key instructions and meaning.
-- **📦 Modular Design:** Each feature is a standalone module—use them independently or together.
-- **🧪 Test-Driven:** Comprehensive unit tests with mocked or live Cohere API responses.
-- **🔐 Secure API Key Handling:** Loads your Cohere API key from a `.env` file or environment variable.
-- **🖥️ CLI Support:** Optimize prompts directly from the command line.
----
-✅ Does promptfit Lose Context?
-❌ If Done Naively:
-If you just truncate text to meet token limits, yes, you risk removing vital context.
+## Key Features
 
-This is what most LLM developers currently do manually — and it's dangerous.
+**Token Budget Estimator**  
+Analyze token usage for prompt templates, sections, and variables before API calls.
 
-✅ What promptfit Does Instead:
-Your package intelligently retains semantically relevant chunks and:
+**Semantic Relevance Scoring**  
+Split prompts into sections, generate embeddings, and rank by cosine similarity to your query.
 
-✅ Uses cosine similarity between the query and each sentence to prioritize important information.
+**Smart Prompt Pruner**  
+Intelligently remove or trim low-relevance sections while keeping important content.
 
-✅ Applies token estimation to make sure output fits within budget.
+**Paraphrasing Module**  
+Use Cohere's LLM to rewrite and compress content instead of dropping it entirely.
 
-✅ Optionally uses paraphrasing (via Cohere LLM) to compress rather than drop content.
+**CLI Support**  
+Optimize prompts directly from the command line for quick testing.
 
-✅ Keeps the query in mind throughout — relevance is measured with respect to the query, not blindly.
+## Does PromptFit Lose Context?
 
+**Traditional approach (risky):**  
+Truncate text to meet limits, often removing vital information.
 
----
-## 📊 PromptFit vs Baseline Comparison (RAG Flow)
-|                         Metric | Without PromptFit (Baseline) | With PromptFit (Optimized) | Improvement     |
-| -----------------------------: | :--------------------------: | :------------------------: | :-------------- |
-| 🔢 Tokens in Retrieved Context |              284             |             97             | ↓ 65.8%         |
-|           ⏱️ Optimization Time |              N/A             |            1.72s           | \~Real-time     |
-|              💬 Prompt Clarity |  Mixed, sometimes redundant  |     Concise & relevant     | ✅ More focused  |
-|             💰 Cost Efficiency | Higher (due to long context) |    Lower (fewer tokens)    | ↓ Reduced spend |
-|        📈 LLM Response Quality |       Slightly verbose       |     Direct, contextual     | ✅ More precise  |
+**PromptFit approach (intelligent):**
+- Uses cosine similarity between query and content to prioritize relevant information
+- Applies token estimation to ensure output fits within budget  
+- Optionally compresses content through paraphrasing rather than deletion
+- Maintains query context throughout the optimization process
 
-✅ PromptFit ensures you never go over token budget, preserves semantic relevance, and boosts LLM efficiency for production-ready GenAI apps.
+## Performance Comparison
 
----
-## 🛠️ Tech Stack
+RAG Flow optimization results:
 
-- **Language:** Python 3.10+
-- **LLM:** [Cohere command-r-plus](https://docs.cohere.com/docs/models-overview)
-- **Embeddings:** embed-english-v3.0
-- **Tokenizer:** Cohere’s estimator (or manual fallback)
-- **Libraries:**
-  - `cohere`, `scikit-learn`, `tiktoken`, `python-dotenv`, `nltk`/`spacy`, `rich`, `typer`, `pytest`
+| Metric | Baseline | With PromptFit | Improvement |
+|--------|----------|----------------|-------------|
+| Tokens in Context | 284 | 97 | 65.8% reduction |
+| Optimization Time | N/A | 1.72s | Real-time |
+| Prompt Clarity | Mixed/redundant | Concise & relevant | More focused |
+| Cost Efficiency | Higher token usage | Reduced tokens | Lower spend |
+| Response Quality | Sometimes verbose | Direct & contextual | More precise |
 
----
-
-## 📦 Installation
+## Installation
 
 ```bash
 pip install promptfit
 ```
 
----
-## Tested Output
+## Quick Start
 
-![image_alt](https://github.com/VedantChandore/promptfit/blob/main/docs/image.png?raw=true)
-
-
-## 🚀 Demo Usage
-
-### **Python API**
+### Python API
 
 ```python
 import os
-import time
-# 1. Set your Cohere key (or have it in your env)
-os.environ["COHERE_API_KEY"] = "Kwi33HNnmXRDCkO4j7FndNP3LATOoKX3yvoOdztK"
-
-from promptfit.token_budget import estimate_tokens
-from promptfit.utils import split_sentences
-from promptfit.embedder import get_embeddings
-from promptfit.relevance import compute_cosine_similarities
 from promptfit.optimizer import optimize_prompt
 
-# 2. Your actual long prompt
+# Set your Cohere API key
+os.environ["COHERE_API_KEY"] = "your-api-key-here"
+
+# Your original prompt
 prompt = """
 You are a customer-support assistant. A user reports that their device fails
 intermittently under cold conditions, the battery drains within two hours, and
-previous support tickets went unanswered. They’ve provided logs and screenshots.
+previous support tickets went unanswered. They've provided logs and screenshots.
 Please summarize the issues, note their emotional tone, propose immediate
 fixes, and suggest long-term retention strategies.
 """
 
 query = "Summarize issues, emotional tone, action items, and retention strategies."
 
-print("=== PROMPT ===")
-print(prompt)
-
-# 3. Split into sentences
-sentences = split_sentences(prompt)
-print("=== SENTENCES ===")
-for i, s in enumerate(sentences, 1):
-    print(f"{i}: {s!r}")
-print()
-
-# 4. Compute embeddings (first the query, then the sentences)
-all_texts = [query] + sentences
-embs = get_embeddings(all_texts)
-
-# 5. Compute cosine similarities between query and each sentence
-query_emb = embs[0]
-sent_embs = embs[1:]
-scores = compute_cosine_similarities(query_emb, sent_embs)
-
-# 6. Display relevance scores
-print("=== RELEVANCE SCORES OF COSINE SIMILARITY===")
-for sent, score in zip(sentences, scores):
-    print(f"{score:.4f} – {sent!r}")
-print()
-
-# 7. Show total token count before optimization
-orig_tokens = estimate_tokens(prompt)
-print(f"Original prompt ≈ {orig_tokens} tokens\n")
-
-# 8. Run optimizer with timing
-budget = 40
-start_time = time.time()
-optimized = optimize_prompt(prompt, query, max_tokens=budget)
-end_time = time.time()
-opt_tokens = estimate_tokens(optimized)
-
-tokens_saved = orig_tokens - opt_tokens
-percent_saved = (tokens_saved / orig_tokens) * 100
-
-# 9. Output final result with efficiency stats
-print(f"Optimized prompt ({opt_tokens} tokens ≤ {budget} budget):\n")
-print(optimized)
-print("\n--- Efficiency Stats ---")
-print(f"Token reduction: {orig_tokens - opt_tokens} tokens")
-print(f"Reduction percentage: {(orig_tokens - opt_tokens) / orig_tokens * 100:.1f}%")
-print(f"Optimization time: {end_time - start_time:.2f} seconds")
-print(f"Tokens Saved: {tokens_saved}")
-
+# Optimize for 40 token budget
+optimized_prompt = optimize_prompt(prompt, query, max_tokens=40)
+print(optimized_prompt)
 ```
 
-### **Command Line**
+### Command Line
 
 ```bash
 python -m promptfit.cli "YOUR_PROMPT" "YOUR_QUERY" --max-tokens 120
 ```
 
-### **Full Demo Script**
-See [`demo/demo_usage.py`](demo/demo_usage.py) for a comprehensive example covering:
-- Token estimation
-- Embedding generation
-- Relevance ranking
-- Pruning and paraphrasing
-- End-to-end optimization
+## Detailed Example
 
----
+```python
+import os
+import time
+from promptfit.token_budget import estimate_tokens
+from promptfit.utils import split_sentences
+from promptfit.embedder import get_embeddings
+from promptfit.relevance import compute_cosine_similarities
+from promptfit.optimizer import optimize_prompt
 
-## 🗝️ Environment Setup
+# Set API key
+os.environ["COHERE_API_KEY"] = "your-api-key-here"
 
-- Store your `COHERE_API_KEY` in a `.env` file in your project root:
-  ```
-  COHERE_API_KEY=your-real-api-key-here
-  ```
-- Or set it in your shell:
-  ```bash
-  export COHERE_API_KEY=your-real-api-key-here
-  ```
+prompt = """
+You are a customer-support assistant. A user reports that their device fails
+intermittently under cold conditions, the battery drains within two hours, and
+previous support tickets went unanswered. They've provided logs and screenshots.
+Please summarize the issues, note their emotional tone, propose immediate
+fixes, and suggest long-term retention strategies.
+"""
 
----
+query = "Summarize issues, emotional tone, action items, and retention strategies."
 
-## 📚 Directory Structure
+# Analyze original prompt
+sentences = split_sentences(prompt)
+print(f"Split into {len(sentences)} sentences")
+
+# Get embeddings for relevance scoring
+all_texts = [query] + sentences
+embeddings = get_embeddings(all_texts)
+
+# Compute relevance scores
+query_emb = embeddings[0]
+sent_embs = embeddings[1:]
+scores = compute_cosine_similarities(query_emb, sent_embs)
+
+print("\nRelevance Scores:")
+for sent, score in zip(sentences, scores):
+    print(f"{score:.4f} - {sent[:50]}...")
+
+# Optimize with timing
+budget = 40
+start_time = time.time()
+optimized = optimize_prompt(prompt, query, max_tokens=budget)
+optimization_time = time.time() - start_time
+
+# Results
+orig_tokens = estimate_tokens(prompt)
+opt_tokens = estimate_tokens(optimized)
+tokens_saved = orig_tokens - opt_tokens
+
+print(f"\nResults:")
+print(f"Original: {orig_tokens} tokens")
+print(f"Optimized: {opt_tokens} tokens")
+print(f"Saved: {tokens_saved} tokens ({tokens_saved/orig_tokens*100:.1f}%)")
+print(f"Time: {optimization_time:.2f}s")
+print(f"\nOptimized prompt:\n{optimized}")
+```
+
+## Environment Setup
+
+Create a `.env` file in your project root:
+
+```env
+COHERE_API_KEY=your-actual-api-key-here
+```
+
+Or set the environment variable:
+
+```bash
+export COHERE_API_KEY=your-actual-api-key-here
+```
+
+## Technical Details
+
+**Language**: Python 3.10+  
+**LLM**: Cohere command-r-plus  
+**Embeddings**: embed-english-v3.0  
+**Tokenizer**: Cohere's estimator with fallback  
+
+**Dependencies**: `cohere`, `scikit-learn`, `tiktoken`, `python-dotenv`, `nltk`, `rich`, `typer`, `pytest`
+
+## Project Structure
 
 ```
 promptfit/
-│
 ├── __init__.py
-├── token_budget.py
-├── embedder.py
-├── relevance.py
-├── optimizer.py
-├── paraphraser.py
-├── cli.py
-├── utils.py
-├── config.py
-│
-├── README.md
-├── requirements.txt
-│
-├── tests/
+├── token_budget.py      # Token estimation utilities
+├── embedder.py          # Embedding generation
+├── relevance.py         # Similarity scoring
+├── optimizer.py         # Main optimization logic
+├── paraphraser.py       # Content compression
+├── cli.py              # Command line interface
+├── utils.py            # Helper functions
+├── config.py           # Configuration management
+├── tests/              # Test suite
 │   ├── test_token_budget.py
 │   ├── test_relevance.py
 │   ├── test_optimizer.py
 │   └── test_paraphraser.py
-│
 └── demo/
-    └── demo_usage.py
+    └── demo_usage.py   # Complete example
 ```
 
----
+## Why PromptFit?
 
-## 💡 Why Use promptfit?
+**Cost Effective**: Only send relevant, concise prompts to reduce token usage and API costs.
 
-- **Save tokens, save money:** Only send the most relevant, concise prompts to your LLM.
-- **Prevent errors:** Never exceed token limits or lose critical context.
-- **Automate prompt engineering:** Focus on your app, not manual prompt trimming.
-- **Works with any LLM:** Designed for Cohere, but easily adaptable to OpenAI, Gemini, Anthropic, and more.
+**Reliable**: Never exceed token limits or lose critical context through intelligent optimization.
 
----
+**Time Saving**: Automate prompt engineering so you can focus on building your application.
 
-## 📝 License
+**LLM Agnostic**: Built for Cohere but easily adaptable to OpenAI, Anthropic, Google, and other providers.
 
-MIT License
+**Production Ready**: Comprehensive test suite and modular design for enterprise applications.
 
----
+## Contributing
 
-## 🤝 Contributing
+Contributions are welcome! Please feel free to submit pull requests, report issues, or suggest improvements.
 
-Pull requests, issues, and stars are welcome! For major changes, please open an issue first to discuss what you’d like to change.
+For major changes, please open an issue first to discuss your proposed changes.
 
----
+## License
 
-## 📣 Author
+MIT License - see LICENSE file for details.
+
+## Author
 
 **Vedant Laxman Chandore**  
-[GitHub](https://github.com/VedantChandore)
+[GitHub Profile](https://github.com/VedantChandore)
 
 ---
 
-
-*Built for the next generation of GenAI and LLM developers. Optimize your prompts, maximize your results!* 
-=======
-
-
+*Built for developers building the next generation of GenAI applications. Optimize your prompts, maximize your results.*
