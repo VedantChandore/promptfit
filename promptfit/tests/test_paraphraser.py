@@ -1,6 +1,3 @@
-# test_paraphraser.py
-# Unit tests for paraphraser module
-
 import pytest
 from promptfit import paraphraser
 
@@ -9,13 +6,19 @@ def test_paraphrase_prompt(monkeypatch):
     class DummyGen:
         def __init__(self, text):
             self.text = text
+
     class DummyResp:
-        generations = [DummyGen("compressed prompt")]
+        def __init__(self, text):
+            self.generations = [DummyGen(text)]
+
     class DummyCohere:
-        def __init__(self, key): pass
+        def __init__(self, key):
+            pass
         def generate(self, **kwargs):
-            return DummyResp()
+            return DummyResp("compressed prompt")
+
     monkeypatch.setattr(paraphraser, "cohere", type("cohere", (), {"Client": DummyCohere}))
     monkeypatch.setattr(paraphraser, "get_cohere_api_key", lambda: "dummy")
+
     result = paraphraser.paraphrase_prompt("long prompt", instructions="shorten", max_tokens=10)
-    assert result == "compressed prompt" 
+    assert result == "compressed prompt"

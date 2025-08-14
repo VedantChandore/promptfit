@@ -1,3 +1,4 @@
+README.md
 pyproject.toml
 promptfit/__init__.py
 promptfit/cli.py

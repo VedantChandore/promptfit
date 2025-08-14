@@ -2,6 +2,7 @@
 
 import os
 import time
+
 # 1. Set your Cohere key (or have it in your env)
 os.environ["COHERE_API_KEY"] = "Kwi33HNnmXRDCkO4j7FndNP3LATOoKX3yvoOdztK"
 
@@ -22,36 +23,8 @@ fixes, and suggest long-term retention strategies.
 
 query = "Summarize issues, emotional tone, action items, and retention strategies."
 
-print("=== PROMPT ===")
-print(prompt)
-
-# 3. Split into sentences
-sentences = split_sentences(prompt)
-print("=== SENTENCES ===")
-for i, s in enumerate(sentences, 1):
-    print(f"{i}: {s!r}")
-print()
-
-# 4. Compute embeddings (first the query, then the sentences)
-all_texts = [query] + sentences
-embs = get_embeddings(all_texts)
-
-# 5. Compute cosine similarities between query and each sentence
-query_emb = embs[0]
-sent_embs = embs[1:]
-scores = compute_cosine_similarities(query_emb, sent_embs)
-
-# 6. Display relevance scores
-print("=== RELEVANCE SCORES OF COSINE SIMILARITY===")
-for sent, score in zip(sentences, scores):
-    print(f"{score:.4f} – {sent!r}")
-print()
-
-# 7. Show total token count before optimization
+# Pre-compute token counts and optimization
 orig_tokens = estimate_tokens(prompt)
-print(f"Original prompt ≈ {orig_tokens} tokens\n")
-
-# 8. Run optimizer with timing
 budget = 40
 start_time = time.time()
 optimized = optimize_prompt(prompt, query, max_tokens=budget)
@@ -60,15 +33,40 @@ opt_tokens = estimate_tokens(optimized)
 
 tokens_saved = orig_tokens - opt_tokens
 percent_saved = (tokens_saved / orig_tokens) * 100
+elapsed_time = end_time - start_time
 
-# 9. Output final result with efficiency stats
-print(f"Optimized prompt ({opt_tokens} tokens ≤ {budget} budget):\n")
+# 3. Efficiency Stats FIRST
+print("--- Efficiency Stats ---")
+print(f"Original tokens: {orig_tokens}")
+print(f"Optimized tokens: {opt_tokens}")
+print(f"Tokens saved: {tokens_saved} ({percent_saved:.1f}% reduction)")
+print(f"Optimization time: {elapsed_time:.2f} seconds")
+print()
+
+# 4. Display prompt and analysis
+print("=== PROMPT ===")
+print(prompt)
+
+# 5. Split into sentences
+sentences = split_sentences(prompt)
+print("=== SENTENCES ===")
+for i, s in enumerate(sentences, 1):
+    print(f"{i}: {s!r}")
+print()
+
+# 6. Compute embeddings and relevance
+all_texts = [query] + sentences
+embs = get_embeddings(all_texts)
+
+query_emb = embs[0]
+sent_embs = embs[1:]
+scores = compute_cosine_similarities(query_emb, sent_embs)
+
+print("=== RELEVANCE SCORES OF COSINE SIMILARITY===")
+for sent, score in zip(sentences, scores):
+    print(f"{score:.4f}{sent!r}")
+print()
+
+# 7. Print optimized prompt
+print(f"Optimized prompt ({opt_tokens} tokens <= {budget} budget):\n")
 print(optimized)
-print("\n--- Efficiency Stats ---")
-print(f"Token reduction: {orig_tokens - opt_tokens} tokens")
-print(f"Reduction percentage: {(orig_tokens - opt_tokens) / orig_tokens * 100:.1f}%")
-print(f"Optimization time: {end_time - start_time:.2f} seconds")
-print(f"Tokens Saved: {tokens_saved}")
-
-
-
