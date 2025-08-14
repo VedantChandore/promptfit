@@ -60,6 +60,10 @@ Truncate text to meet limits, often removing vital information.
 - Optionally compresses content through paraphrasing rather than deletion
 - Maintains query context throughout the optimization process
 
+## Tested Output
+
+![image_alt](https://github.com/VedantChandore/promptfit/blob/main/docs/image.png?raw=true)
+
 ## Performance Comparison
 
 RAG Flow optimization results:
