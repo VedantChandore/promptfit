@@ -29,6 +29,8 @@ PromptFit solves this through intelligent prompt optimization:
 - **Token Budget Analysis**: Estimate token usage before sending prompts to LLMs
 - **Semantic Relevance Scoring**: Rank prompt sections by relevance using embeddings and cosine similarity  
 - **Smart Content Pruning**: Remove low-relevance sections while preserving key information
+- **Caching Layer** – Skip re-computing embeddings for repeated sentences and queries.
+- **Better RAG Support** – Easily drop into retrieval-augmented generation pipelines.
 - **Intelligent Paraphrasing**: Compress content using LLMs instead of just dropping it
 - **Modular Architecture**: Use individual components or the complete optimization pipeline
 
@@ -45,6 +47,9 @@ Intelligently remove or trim low-relevance sections while keeping important cont
 
 **Paraphrasing Module**  
 Use Cohere's LLM to rewrite and compress content instead of dropping it entirely.
+
+**Caching for Speed**
+Reuse previous computations to make repeated optimization calls instant
 
 **CLI Support**  
 Optimize prompts directly from the command line for quick testing.
