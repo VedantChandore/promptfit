@@ -36,7 +36,7 @@ percent_saved = (tokens_saved / orig_tokens) * 100
 elapsed_time = end_time - start_time
 
 # 3. Efficiency Stats FIRST
-print("--- Efficiency Stats ---")
+print("--- Efficiency Stats ---")_2
 print(f"Original tokens: {orig_tokens}")
 print(f"Optimized tokens: {opt_tokens}")
 print(f"Tokens saved: {tokens_saved} ({percent_saved:.1f}% reduction)")
