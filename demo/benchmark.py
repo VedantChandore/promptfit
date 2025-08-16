@@ -1,45 +1,68 @@
-# verify_promptfit.py
-
 import os
-import sys
-from promptfit.token_budget import estimate_tokens, estimate_tokens_per_section, estimate_total_tokens
-from promptfit.relevance import rank_segments_by_relevance
+import time
+from promptfit.token_budget import estimate_tokens
 from promptfit.optimizer import optimize_prompt
+from promptfit.utils import split_sentences
+from promptfit.embedder import get_embeddings
+from promptfit.relevance import compute_cosine_similarities
 
-# Make sure your COHERE_API_KEY is set
-if not os.getenv("COHERE_API_KEY"):
-    print("⚠️  WARNING: COHERE_API_KEY not found in environment. Some tests will be skipped.")
+# Setup (replace with your key if paraphrasing/compression is enabled)
+os.environ["COHERE_API_KEY"] = "Kwi33HNnmXRDCkO4j7FndNP3LATOoKX3yvoOdztK"
 
-def test_token_budget():
-    text = "This is a simple test sentence."
-    tokens = estimate_tokens(text)
-    print(f"Token count for \"{text}\": {tokens}")
+# Example retrieved context from a RAG pipeline
+retrieved_docs = """
+You are a customer-support assistant. A user reports that their device fails
+intermittently under cold conditions, the battery drains within two hours, and
+previous support tickets went unanswered. They've provided logs and screenshots.
+Please summarize the issues, note their emotional tone, propose immediate
+fixes, and suggest long-term retention strategies.
+"""
 
-def test_relevance():
-    segments = ["apple", "banana", "cherry"]
-    ref = "I like bananas and fruit."
-    ranked = rank_segments_by_relevance(segments, ref, get_embeddings_fn=lambda texts: [[0]] * len(texts))
-    print("Relevance ranking (mocked embeddings):", ranked)
+query = "Summarize issues, emotional tone, action items, and retention strategies."
 
-def test_optimizer():
-    prompt = "A B C D E F G H I J"
-    query = "pick letters"
-    # set budget very low so pruning+paraphrase triggers
-    optimized = optimize_prompt(prompt, query, max_tokens=5)
-    tok = estimate_tokens(optimized)
-    print(f"Optimized prompt: \"{optimized}\" ({tok} tokens)")
-    assert tok <= 5, f"Budget exceeded: got {tok} tokens"
+# -------------------------------
+# Benchmark: BEFORE PromptFit
+# -------------------------------
+print("=== BASELINE PROMPT ===")
+print(retrieved_docs)
 
-if __name__ == "__main__":
-    print("=== TOKEN BUDGET TEST ===")
-    test_token_budget()
-    print("\n=== RELEVANCE TEST ===")
-    test_relevance()
-    print("\n=== OPTIMIZER TEST ===")
-    try:
-        test_optimizer()
-        print("Optimizer test passed ✅")
-    except AssertionError as e:
-        print("Optimizer test failed ❌", e)
-        sys.exit(1)
-    print("\nAll manual checks completed.")
+baseline_tokens = estimate_tokens(retrieved_docs)
+print(f"\nBaseline Tokens: {baseline_tokens}\n")
+
+# -------------------------------
+# Benchmark: Relevance Scoring
+# -------------------------------
+sentences = split_sentences(retrieved_docs)
+all_texts = [query] + sentences
+embeddings = get_embeddings(all_texts)
+
+query_emb = embeddings[0]
+sent_embs = embeddings[1:]
+scores = compute_cosine_similarities(query_emb, sent_embs)
+
+print("=== RELEVANCE SCORES OF COSINE SIMILARITY ===")
+for sent, score in zip(sentences, scores):
+    print(f"{score:.4f} - {sent.strip()[:80]}...")
+
+# -------------------------------
+# Benchmark: AFTER PromptFit
+# -------------------------------
+budget = 40
+start_time = time.time()
+optimized_prompt = optimize_prompt(
+    retrieved_docs, query, max_tokens=budget
+)
+optimization_time = time.time() - start_time
+
+optimized_tokens = estimate_tokens(optimized_prompt)
+tokens_saved = baseline_tokens - optimized_tokens
+reduction_pct = tokens_saved / baseline_tokens * 100
+
+print("\n=== EFFICIENCY STATS ===")
+print(f"Original tokens: {baseline_tokens}")
+print(f"Optimized tokens: {optimized_tokens}")
+print(f"Tokens saved: {tokens_saved} ({reduction_pct:.1f}% reduction)")
+print(f"Optimization time: {optimization_time:.2f} seconds")
+
+print("\n=== OPTIMIZED PROMPT ===")
+print(optimized_prompt)
