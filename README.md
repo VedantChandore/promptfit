@@ -67,7 +67,7 @@ Truncate text to meet limits, often removing vital information.
 
 ## Tested Output
 
-![image_alt](https://github.com/VedantChandore/promptfit/blob/main/docs/image.png?raw=true)
+![image_alt](https://github.com/VedantChandore/promptfit/blob/main/docs/benchmark_analysis.png?raw=true)
 
 ## Performance Comparison
 
